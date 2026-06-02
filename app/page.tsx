@@ -182,7 +182,11 @@ export default function Home() {
             Tarjetas didácticas de alimentos en español
           </p>
           <button className="btn" onClick={() => setShowGame(true)}
-            style={{marginTop:16, background:"linear-gradient(135deg,#4ECDC4,#FF6B35)", color:"#fff"}}>
+            style={{
+              marginTop:22, background:"linear-gradient(135deg,#4ECDC4,#FF6B35)", color:"#fff",
+              fontSize:"1.5rem", padding:"20px 48px", borderRadius:99,
+              boxShadow:"0 8px 28px rgba(255,107,53,0.45)", letterSpacing:0.5
+            }}>
             🎮 ¡Jugar a Bloxd.io!
           </button>
         </header>
