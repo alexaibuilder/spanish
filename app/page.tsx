@@ -54,6 +54,7 @@ export default function Home() {
   const [seen, setSeen] = useState<Set<number>>(new Set());
   const [finished, setFinished] = useState(false);
   const [showKnowControls, setShowKnowControls] = useState(false);
+  const [showGame, setShowGame] = useState(false);
 
   const card = cards[index];
   const progress = cards.length > 0 ? (seen.size / cards.length) * 100 : 0;
@@ -180,6 +181,10 @@ export default function Home() {
           <p style={{fontSize:"1rem", color:"#888", marginTop:6, fontWeight:600}}>
             Tarjetas didácticas de alimentos en español
           </p>
+          <button className="btn" onClick={() => setShowGame(true)}
+            style={{marginTop:16, background:"linear-gradient(135deg,#4ECDC4,#FF6B35)", color:"#fff"}}>
+            🎮 ¡Jugar a Bloxd.io!
+          </button>
         </header>
 
         {/* Category buttons */}
@@ -304,6 +309,38 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* Bloxd.io game overlay */}
+      {showGame && (
+        <div style={{
+          position:"fixed", inset:0, zIndex:1000, background:"rgba(45,45,45,0.85)",
+          display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+          padding:"16px"
+        }}>
+          <div style={{
+            width:"100%", maxWidth:1100, display:"flex", alignItems:"center",
+            justifyContent:"space-between", marginBottom:12, color:"#fff"
+          }}>
+            <span style={{fontFamily:"'Baloo 2', cursive", fontSize:"1.4rem", fontWeight:800}}>
+              🎮 Bloxd.io
+            </span>
+            <button className="btn" onClick={() => setShowGame(false)}
+              style={{background:"#EF4444", color:"#fff", fontSize:"0.88rem", padding:"10px 20px"}}>
+              ✕ Cerrar
+            </button>
+          </div>
+          <iframe
+            src="https://bloxd.io/"
+            title="Bloxd.io"
+            allow="fullscreen; autoplay; gamepad; pointer-lock"
+            style={{
+              width:"100%", maxWidth:1100, height:"min(75vh, 700px)",
+              border:"4px solid #FFE66D", borderRadius:20,
+              boxShadow:"0 12px 48px rgba(0,0,0,0.4)", background:"#000"
+            }}
+          />
+        </div>
+      )}
     </>
   );
 }
