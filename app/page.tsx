@@ -317,30 +317,21 @@ export default function Home() {
       {/* Bloxd.io game overlay */}
       {showGame && (
         <div style={{
-          position:"fixed", inset:0, zIndex:1000, background:"rgba(45,45,45,0.85)",
-          display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-          padding:"16px"
+          position:"fixed", inset:0, zIndex:1000, background:"#000"
         }}>
-          <div style={{
-            width:"100%", maxWidth:1100, display:"flex", alignItems:"center",
-            justifyContent:"space-between", marginBottom:12, color:"#fff"
-          }}>
-            <span style={{fontFamily:"'Baloo 2', cursive", fontSize:"1.4rem", fontWeight:800}}>
-              🎮 Bloxd.io
-            </span>
-            <button className="btn" onClick={() => setShowGame(false)}
-              style={{background:"#EF4444", color:"#fff", fontSize:"0.88rem", padding:"10px 20px"}}>
-              ✕ Cerrar
-            </button>
-          </div>
+          <button className="btn" onClick={() => setShowGame(false)}
+            style={{
+              position:"absolute", top:16, right:16, zIndex:1001,
+              background:"#EF4444", color:"#fff", fontSize:"0.88rem", padding:"10px 20px"
+            }}>
+            ✕ Cerrar
+          </button>
           <iframe
             src="https://bloxd.io/"
             title="Bloxd.io"
             allow="fullscreen; autoplay; gamepad; pointer-lock"
             style={{
-              width:"100%", maxWidth:1100, height:"min(75vh, 700px)",
-              border:"4px solid #FFE66D", borderRadius:20,
-              boxShadow:"0 12px 48px rgba(0,0,0,0.4)", background:"#000"
+              width:"100%", height:"100%", border:"none", background:"#000"
             }}
           />
         </div>
