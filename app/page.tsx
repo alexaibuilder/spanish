@@ -36,12 +36,20 @@ const ALL_CARDS = [
   { emoji:"🍦", spanish:"El helado",     english:"Ice cream",   category:"Postres",  example:"El helado es frío y dulce." },
   { emoji:"🍫", spanish:"El chocolate",  english:"Chocolate",   category:"Postres",  example:"Me encanta el chocolate." },
   { emoji:"🍩", spanish:"La dona",       english:"Donut",       category:"Postres",  example:"La dona tiene azúcar encima." },
+  { emoji:"🐶", spanish:"El perro",      english:"Dog",         category:"Animales", example:"El perro mueve la cola." },
+  { emoji:"🐱", spanish:"El gato",       english:"Cat",         category:"Animales", example:"El gato duerme en el sofá." },
+  { emoji:"🐰", spanish:"El conejo",     english:"Rabbit",      category:"Animales", example:"El conejo salta muy rápido." },
+  { emoji:"🐻", spanish:"El oso",        english:"Bear",        category:"Animales", example:"El oso vive en el bosque." },
+  { emoji:"🦁", spanish:"El león",       english:"Lion",        category:"Animales", example:"El león es el rey de la selva." },
+  { emoji:"🐸", spanish:"La rana",       english:"Frog",        category:"Animales", example:"La rana es verde y salta." },
+  { emoji:"🐴", spanish:"El caballo",    english:"Horse",       category:"Animales", example:"El caballo corre por el campo." },
+  { emoji:"🐦", spanish:"El pájaro",     english:"Bird",        category:"Animales", example:"El pájaro canta por la mañana." },
 ];
 
 const CATEGORIES = ["Todas", ...Array.from(new Set(ALL_CARDS.map(c => c.category)))];
 
 const CAT_EMOJI: Record<string, string> = {
-  Frutas:"🍓", Verduras:"🥦", Comidas:"🍽️", Bebidas:"🥤", Postres:"🍰"
+  Frutas:"🍓", Verduras:"🥦", Comidas:"🍽️", Bebidas:"🥤", Postres:"🍰", Animales:"🐾"
 };
 
 export default function Home() {
@@ -97,6 +105,25 @@ export default function Home() {
     setIndex(0); setKnown(0); setLearning(0);
     setSeen(new Set()); setIsFlipped(false);
     setShowKnowControls(false); setFinished(false);
+  };
+
+  const shuffle = () => {
+    const shuffled = [...cards];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    setCards(shuffled);
+    restart();
+  };
+
+  const speak = (text: string) => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
   };
 
   // Load Google Fonts
@@ -183,9 +210,9 @@ export default function Home() {
           </p>
           <button className="btn" onClick={() => setShowGame(true)}
             style={{
-              marginTop:22, background:"linear-gradient(135deg,#4ECDC4,#FF6B35)", color:"#fff",
-              fontSize:"1.5rem", padding:"20px 48px", borderRadius:99,
-              boxShadow:"0 8px 28px rgba(255,107,53,0.45)", letterSpacing:0.5
+              marginTop:16, background:"linear-gradient(135deg,#4ECDC4,#FF6B35)", color:"#fff",
+              fontSize:"0.9rem", padding:"9px 20px",
+              boxShadow:"0 4px 14px rgba(255,107,53,0.35)"
             }}>
             🎮 ¡Jugar a Bloxd.io!
           </button>
@@ -252,6 +279,11 @@ export default function Home() {
                     textShadow:"0 2px 8px rgba(0,0,0,0.15)"}}>
                     {card?.spanish}
                   </div>
+                  <button className="btn" onClick={(e) => { e.stopPropagation(); if (card) speak(card.spanish); }}
+                    style={{background:"rgba(255,255,255,0.25)", color:"#fff", fontSize:"0.85rem",
+                      padding:"8px 18px", marginTop:12, backdropFilter:"blur(4px)"}}>
+                    🔊 Escuchar
+                  </button>
                   <div style={{fontSize:"0.9rem", color:"rgba(255,255,255,0.85)",
                     textAlign:"center", marginTop:10, fontStyle:"italic", fontWeight:600}}>
                     {card?.example}
@@ -295,6 +327,13 @@ export default function Home() {
                 Siguiente →
               </button>
             </div>
+
+            {/* Shuffle */}
+            <button className="btn" onClick={shuffle}
+              style={{marginTop:16, background:"#4ECDC4", color:"#fff",
+                fontSize:"0.85rem", padding:"9px 22px"}}>
+              🔀 Mezclar tarjetas
+            </button>
           </>
         ) : (
           /* Congrats screen */
