@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 const ALL_CARDS = [
   { emoji:"🍎", spanish:"La manzana",    english:"Apple",       category:"Frutas",   example:"Quiero una manzana roja." },
@@ -63,6 +63,30 @@ export default function Home() {
   const [finished, setFinished] = useState(false);
   const [showKnowControls, setShowKnowControls] = useState(false);
   const [showGame, setShowGame] = useState(false);
+
+  // Secret unlock: tap the title emoji 5x quickly, or type "bloxd"
+  const tapCount = useRef(0);
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const secretTap = () => {
+    tapCount.current += 1;
+    if (tapTimer.current) clearTimeout(tapTimer.current);
+    if (tapCount.current >= 5) {
+      tapCount.current = 0;
+      setShowGame(true);
+      return;
+    }
+    tapTimer.current = setTimeout(() => { tapCount.current = 0; }, 1200);
+  };
+
+  useEffect(() => {
+    let buffer = "";
+    const onKey = (e: KeyboardEvent) => {
+      buffer = (buffer + e.key).slice(-5).toLowerCase();
+      if (buffer === "bloxd") { setShowGame(true); buffer = ""; }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const card = cards[index];
   const progress = cards.length > 0 ? (seen.size / cards.length) * 100 : 0;
@@ -204,18 +228,13 @@ export default function Home() {
           <h1 style={{
             fontFamily:"'Baloo 2', cursive", fontSize:"clamp(2rem,6vw,3.2rem)",
             fontWeight:800, color:"#FF6B35", letterSpacing:"-1px", lineHeight:1.1
-          }}>🍽️ ¡Aprende Comida!</h1>
+          }}>
+            <span onClick={secretTap} style={{cursor:"default", userSelect:"none"}}
+              title="" aria-hidden>🍽️</span> ¡Aprende Comida!
+          </h1>
           <p style={{fontSize:"1rem", color:"#888", marginTop:6, fontWeight:600}}>
             Tarjetas didácticas de alimentos en español
           </p>
-          <button className="btn" onClick={() => setShowGame(true)}
-            style={{
-              marginTop:16, background:"linear-gradient(135deg,#4ECDC4,#FF6B35)", color:"#fff",
-              fontSize:"0.9rem", padding:"9px 20px",
-              boxShadow:"0 4px 14px rgba(255,107,53,0.35)"
-            }}>
-            🎮 ¡Jugar a Bloxd.io!
-          </button>
         </header>
 
         {/* Category buttons */}
